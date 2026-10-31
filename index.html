@@ -3,438 +3,209 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3 Free Tools That Cut Your AI Coding Bill</title>
+<title>Cut Your AI Coding Bill — RTK, Caveman, Context Mode</title>
+<meta name="description" content="Three free tools that cut token waste in Claude Code: RTK, Caveman and Context Mode.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500&family=Geist:wght@400;500&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg-from:   #0f0d13;
-    --bg-to:     #0a0a0c;
-    --bg-raised: #17151e;
-    --bg-inset:  #1e1c27;
-    --border:    #272430;
-    --text:      #f0ede8;
-    --text-2:    #f0ede8;
-    --text-3:    #6b6880;
-    --accent:    #3d2474;
-    --col:       680px;
+    --surface: #17151e;
+    --line: #272430;
+    --text: #f0ede8;
+    --muted: #b5b2aa;
+    --accent: #8f78f2;
+    --tint: rgba(143, 120, 242, 0.14);
+    --tint-text: #c9bcfb;
+    --glass: linear-gradient(#fff 24%, #f7f5f1 50%, #9a978f 84%, #b5b2aa);
+    --mono: 'Geist Mono', monospace;
   }
 
-  html { font-size: 17px; scroll-behavior: smooth; }
+  html { font-size: 17px; color-scheme: dark; }
 
   body {
-    background: linear-gradient(135deg, var(--bg-from) 0%, var(--bg-to) 100%);
-    min-height: 100vh;
+    background:
+      radial-gradient(1200px 520px at 30% -120px, rgba(143, 120, 242, 0.12), transparent 70%) no-repeat,
+      linear-gradient(#13111a, #0f0d13 900px, #0a0a0c 2200px) no-repeat #0a0a0c;
     color: var(--text);
-    font-family: 'Geist', system-ui, sans-serif;
-    font-weight: 300;
-    line-height: 1.75;
+    font-family: 'Geist', sans-serif;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
 
-  #progress {
-    position: fixed;
-    top: 0; left: 0;
-    height: 2px;
-    background: var(--accent);
-    width: 0%;
-    z-index: 200;
-    transition: width 0.08s linear;
-  }
+  a { color: inherit; text-decoration: none; }
+  p { max-width: 65ch; margin-bottom: 1.2rem; }
+  strong { font-weight: 500; }
 
-  .hero {
-    max-width: var(--col);
-    margin: 0 auto;
-    padding: 4rem 1.5rem 0;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.1s forwards;
-  }
+  /* Type: display, title, lead, body, label, code */
 
-  h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.8rem, 7vw, 4.2rem);
-    font-weight: 700;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-    color: var(--text);
-    margin-bottom: 1.2rem;
-  }
-
-  .subtitle {
-    font-family: 'Geist', sans-serif;
-    font-size: 0.98rem;
-    font-weight: 300;
-    color: var(--text-2);
-    line-height: 1.72;
-    margin-bottom: 1.6rem;
-    max-width: 540px;
-  }
-
-  .byline {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    padding-bottom: 1.4rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--bg-inset);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-2);
-    flex-shrink: 0;
-  }
-
-  .byline-text { font-size: 0.76rem; color: var(--text-3); line-height: 1.5; }
-  .byline-text strong { color: var(--text-2); font-weight: 500; display: block; }
-
-  article {
-    max-width: var(--col);
-    margin: 0 auto;
-    padding: 2.6rem 1.5rem 7rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.25s forwards;
-  }
-
-  article p {
-    font-family: 'Geist', sans-serif;
-    font-size: 1rem;
-    font-weight: 300;
-    color: var(--text-2);
-    margin-bottom: 1.5rem;
-    line-height: 1.82;
-  }
-
-  article p:first-of-type { font-size: 1.04rem; }
-
-  .drop-cap::first-letter {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 4.5rem;
-    font-weight: 700;
-    float: left;
-    line-height: 0.8;
-    margin-right: 0.1em;
-    margin-top: 0.12em;
-    color: var(--text);
-  }
-
-  h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--text);
-    margin: 3.5rem 0 0.85rem;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-  }
-
-  .skill-num {
-    display: inline-block;
-    font-family: 'Geist', sans-serif;
-    font-size: 0.65rem;
+  h1, h2, .figure {
+    font-family: 'Inter Tight', sans-serif;
     font-weight: 500;
-    letter-spacing: 0.1em;
-    color: var(--text-3);
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+  }
+
+  h2, .figure, h1 span, h1 em {
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  h2, .figure, h1 span { background-image: var(--glass); }
+
+  /* --fit is the width of the longest title line in em */
+  h1 {
+    font-size: min(clamp(2.8rem, 8.4vw, 6.6rem), calc((100vw - 3rem) / var(--fit)));
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    padding-bottom: 0.08em;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Extend gradients below the baseline; margins preserve the existing spacing. */
+  h1 span, h2 { padding-bottom: 0.15em; }
+  h1 span { display: block; white-space: nowrap; margin-bottom: -0.15em; }
+  h1 em { font-style: normal; background-image: linear-gradient(#ece7ff, #c9bcfb 30%, var(--accent) 72%, #6a52d6); }
+
+  h2, .figure { font-size: 2.2rem; }
+  h2 { margin-bottom: calc(1rem - 0.15em); }
+  .figure { margin-bottom: 1rem; }
+
+  .lead { font-size: 1.2rem; line-height: 1.55; max-width: 34rem; }
+
+  .label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
-    margin-bottom: 0.4rem;
+    color: var(--muted);
   }
 
-  /* Code block */
-  .code-wrap {
-    background: var(--bg-raised);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 2.8rem 0;
-  }
+  code, pre { font-family: var(--mono); font-size: 0.8rem; }
+  code { background: var(--tint); color: var(--tint-text); padding: 0.08em 0.4em; border-radius: 4px; }
+  pre { padding: 1.3rem 1.2rem; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .tag { display: block; width: fit-content; margin-bottom: 1.25rem; padding: 0.25rem 0.55rem; border-radius: 6px; background: var(--tint); color: var(--tint-text); }
 
-  .code-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.65rem 1.1rem;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Geist', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-  }
+  /* Layout */
 
-  .copy-btn {
-    position: relative;
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text-3);
-    font-family: 'Geist', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.05em;
-    padding: 0.25rem 0.65rem;
-    cursor: pointer;
-    overflow: hidden;
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
-    min-width: 52px;
-  }
+  main, footer p { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
 
-  .copy-btn:hover {
-    color: var(--text-2);
-    border-color: var(--text-3);
-  }
+  .hero { padding: 5rem 0 3rem; border-bottom: 1px solid; border-image: linear-gradient(90deg, var(--line) 60%, transparent) 1; }
+  .byline { display: flex; gap: 0.9rem; margin-top: 2rem; }
+  .byline span + span::before { content: '·'; margin-right: 0.9rem; }
 
-  .copy-btn .btn-label {
-    display: block;
-    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease;
-  }
+  section { margin: 3.5rem 0; }
+  .split { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 3rem; align-items: start; }
+  .split > *, .cards > * { min-width: 0; }
 
-  .copy-btn.copied {
-    color: #9d8ec4;
-    border-color: #5a4490;
-    background: rgba(61, 36, 116, 0.15);
-  }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .cards .card { display: flex; flex-direction: column; padding: 1.75rem; }
 
-  .copy-btn.copied .btn-label {
-    transform: scale(1.08);
-  }
+  .media { display: block; width: 100%; border-radius: 12px; margin-bottom: 1.5rem; }
+  .video { display: block; width: min(100%, 360px); aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 12px; }
 
-  .copy-btn.fading {
-    transition: color 0.6s ease, border-color 0.6s ease, background 0.6s ease;
-    color: var(--text-3);
-    border-color: var(--border);
-    background: none;
-  }
+  .code { margin-bottom: 1rem; }
+  .code header { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0.9rem 0.7rem 1.1rem; border-bottom: 1px solid var(--line); }
+  .code button { min-width: 70px; padding: 0.4rem 0.75rem; border: 0; border-radius: 6px; background: var(--text); color: #0a0a0c; cursor: pointer; }
+  .code button:hover { background: #fff; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
-  pre {
-    padding: 1.4rem 1.2rem;
-    overflow-x: auto;
-    font-family: 'Geist Mono', 'Fira Code', 'Courier New', monospace;
-    font-size: 0.79rem;
-    line-height: 1.75;
-    color: var(--text-2);
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
+  .rows { margin-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
+  .rows div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; align-items: baseline; padding: 0.6rem 0; border-top: 1px solid var(--line); }
 
-  pre .comment { color: #6b6880; }
+  .links { margin-top: auto; }
+  .links a { display: flex; justify-content: space-between; padding: 0.8rem 0; border-top: 1px solid var(--line); }
+  .links a::after { content: '↗'; color: var(--muted); }
+  .links a:hover, .links a:hover::after { color: var(--tint-text); }
 
-  .link-row {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin-top: 0.25rem;
-    margin-bottom: 1.75rem;
-  }
+  .prices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; margin: 2.5rem 0 1.25rem; }
+  .prices div { display: flex; flex-direction: column; gap: 0.35rem; padding: 1.25rem 1.4rem; background: var(--surface); }
+  .prices .figure { margin: 0.2rem 0 0; }
+  .prices .ours { background: #221d33; }
 
-  .pill-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.85rem;
-    border-radius: 99px;
-    border: 1px solid var(--border);
-    background: var(--bg-raised);
-    font-family: 'Geist', sans-serif;
-    font-size: 0.7rem;
-    font-weight: 400;
-    color: var(--text-3);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: color 0.18s, border-color 0.18s;
-  }
+  .source { border-bottom: 1px solid var(--line); }
+  .source:hover { color: var(--tint-text); }
 
-  .pill-link:hover {
-    color: var(--text-2);
-    border-color: var(--text-3);
-  }
+  footer { padding: 1.6rem 0; border-top: 1px solid var(--line); }
 
-  .skill-img {
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    display: block;
-    margin: 1.6rem 0 1.4rem;
-    background: var(--bg-raised);
-  }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 3rem 0;
-  }
-
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 1.8rem 1.5rem;
-    text-align: center;
-    font-size: 0.7rem;
-    color: var(--text-3);
-    letter-spacing: 0.06em;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+  @media (max-width: 860px) {
+    .split, .cards { grid-template-columns: 1fr; gap: 2rem; }
+    .prices { grid-template-columns: 1fr 1fr; }
   }
 
   @media (max-width: 600px) {
-    h1 { font-size: 2.4rem; }
-    .hero { padding-top: 2.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+    .hero { padding: 3.5rem 0 2.5rem; }
+    .cards .card { padding: 1.4rem; }
+    h2, .figure { font-size: 1.8rem; }
+    .rows div { grid-template-columns: 6rem 1fr; }
   }
 </style>
 </head>
 <body>
 
-<div id="progress"></div>
+<main>
 
-<section class="hero">
-  <h1>Three Free Tools That Cut Your AI Coding Bill</h1>
-  <p class="subtitle">Every terminal command, every MCP call, every verbose reply is burning tokens. These tools fix that.</p>
-  <div class="byline">
-    <div class="avatar">A</div>
-    <div class="byline-text">
-      <strong>Adi</strong>
-      3 min read &nbsp;·&nbsp; June 2026
-    </div>
-  </div>
-</section>
+  <header class="hero">
+    <h1 style="--fit: 5"><span>Cut your</span> <span>AI coding <em>bill</em></span></h1>
+    <p class="lead">Trim terminal output, wordy replies and MCP payloads with three free tools for Claude Code.</p>
+    <div class="byline label"><span>Adi</span><span>3 min read</span></div>
+  </header>
 
-<article>
+  <section>
+<p>Old command output and tool results can add to the cost of later requests. Caching and compaction affect the bill, but trimming noise before it reaches the conversation still helps.</p>
+  </section>
 
-  <p class="drop-cap">Every time Claude Code runs a command, reads a file, or calls an MCP tool, the raw output lands in your context window and stays there — compounding on every turn. By message 40 of a real session you're paying to re-read thousands of tokens of terminal noise that stopped being useful 30 minutes ago.</p>
-
-  <p>Three tools fix this. Each targets a different source of waste: noisy terminal output, verbose model responses, and bloated MCP payloads. Stack them and you can run hours-long sessions without the bill spiralling.</p>
-
-  <hr class="divider">
-
-  <span class="skill-num">01 / 03</span>
-  <h2>RTK</h2>
-
-  <img class="skill-img" src="https://www.rtk-ai.app/og-image.png" alt="RTK — Rust Token Killer" loading="lazy">
-
-  <div class="link-row">
-    <a class="pill-link" href="https://www.rtk-ai.app" target="_blank">↗ rtk-ai.app</a>
-    <a class="pill-link" href="https://github.com/rtk-ai/rtk" target="_blank">↗ GitHub</a>
-  </div>
-
-  <div class="code-wrap">
-    <div class="code-header">
-      <span>INSTALL</span>
-      <button class="copy-btn" onclick="copyCode(this, 'cmd-rtk')">
-        <span class="btn-label">Copy</span>
-      </button>
-    </div>
-    <pre id="cmd-rtk">curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+  <section class="split">
+<div><span class="label tag">Terminal output</span><h2>RTK</h2><p>A CLI proxy that compresses shell output before the model sees it. It strips colour codes, collapses repeated lines and trims noise while keeping errors.</p>
+<p>A <code>git status</code> that costs about 2,000 tokens comes back at about 200. The project reports 60–90% savings on common commands. It's a single Rust binary that works with Claude Code, Cursor, Codex CLI and Gemini CLI.</p><div class="links"><a href="https://www.rtk-ai.app" target="_blank" rel="noopener">rtk-ai.app</a><a href="https://github.com/rtk-ai/rtk" target="_blank" rel="noopener">GitHub</a></div></div>
+<div><img class="media" src="https://www.rtk-ai.app/og-image.png" alt="RTK, Rust Token Killer" loading="lazy"><div class="card code">
+      <header><span class="label">Install</span><button type="button" class="label" aria-live="polite" onclick="copyCode(this)">Copy</button></header>
+      <pre># Bash / macOS / Linux / WSL
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
 rtk init -g --hook-only</pre>
-  </div>
+    </div></div>
+  </section>
 
-  <p>RTK (Rust Token Killer) is a CLI proxy that intercepts shell commands and compresses their output before it ever reaches the model's context. When Claude Code runs <code>git log</code>, <code>cargo test</code>, <code>npm install</code>, or any other terminal command, RTK strips ANSI codes, collapses repeated log lines, groups related output, and truncates the noise while keeping errors intact. A raw <code>git status</code> that costs ~2,000 tokens comes back at ~200. The project benchmarks 60–90% savings across common dev commands, with one 30-minute TypeScript session dropping from 118,000 tokens to 23,900. It's a single Rust binary, MIT licensed, zero dependencies, and supports Claude Code, Cursor, Codex CLI, Gemini CLI, and a dozen other tools.</p>
+  <section class="split">
+<div><span class="label tag">Model replies</span><h2>Caveman</h2><p>A Claude Code skill by Julius Brussee that makes prose replies terse: fewer pleasantries, less hedging and fewer unrequested explanations.</p>
+<p>The README reports 65–75% fewer output tokens on prose, for example 294 tokens per reply instead of 1,214. <code>/caveman ultra</code> compresses further, and a companion tool shrinks your <code>CLAUDE.md</code> by about 46%.</p><div class="links"><a href="https://github.com/JuliusBrussee/caveman" target="_blank" rel="noopener">GitHub</a></div></div>
+<div><img class="media" src="https://opengraph.githubassets.com/1/JuliusBrussee/caveman" alt="Caveman on GitHub" loading="lazy"><div class="card code">
+      <header><span class="label">Install</span><button type="button" class="label" aria-live="polite" onclick="copyCode(this)">Copy</button></header>
+      <pre>npx skills add JuliusBrussee/caveman</pre>
+    </div></div>
+  </section>
 
-  <hr class="divider">
+  <section class="split">
+<div><span class="label tag">MCP payloads</span><h2>Context Mode</h2><p>Useful for large MCP results from tools like Playwright, Google Drive or GitHub. In the project's examples, a Playwright snapshot is 56 KB and twenty GitHub issues are 59 KB.</p>
+<p>Context Mode, by Mert Köseoğlu, stores raw tool output in a local SQLite database and returns a short summary you can search later. Its benchmark shrinks 315 KB to 5.4 KB. It also saves session state, so the agent stays on track after compaction.</p><div class="links"><a href="https://github.com/mksglu/context-mode" target="_blank" rel="noopener">GitHub</a></div></div>
+<div><img class="media" src="https://opengraph.githubassets.com/1/mksglu/context-mode" alt="Context Mode on GitHub" loading="lazy"><div class="card code">
+      <header><span class="label">Install</span><button type="button" class="label" aria-live="polite" onclick="copyCode(this)">Copy</button></header>
+      <pre>claude mcp add context-mode -- npx -y context-mode</pre>
+    </div></div>
+  </section>
 
-  <span class="skill-num">02 / 03</span>
-  <h2>Caveman</h2>
+</main>
 
-  <img class="skill-img" src="https://opengraph.githubassets.com/e3472592e0e3c87f9f711db8ac00cd9ecc91d2767dbe61200651acbd86f176ab/JuliusBrussee/caveman" alt="Caveman — Claude Code skill for token-compressed responses" loading="lazy">
-
-  <div class="link-row">
-    <a class="pill-link" href="https://github.com/JuliusBrussee/caveman" target="_blank">↗ GitHub</a>
-  </div>
-
-  <div class="code-wrap">
-    <div class="code-header">
-      <span>INSTALL</span>
-      <button class="copy-btn" onclick="copyCode(this, 'cmd-caveman')">
-        <span class="btn-label">Copy</span>
-      </button>
-    </div>
-    <pre id="cmd-caveman">npx skills add JuliusBrussee/caveman</pre>
-  </div>
-
-  <p>LLMs are trained to be helpful and thorough, which means they pad. Caveman is a Claude Code skill by Julius Brussee that enforces a compressed output style — no pleasantries, no hedging, no unsolicited explanations. Just code and results. The README benchmarks 65–75% fewer output tokens on prose responses, with a real test showing 294 tokens per response against 1,214 in normal mode. Code quality is unaffected; only the filler gets stripped. It also ships with intensity levels (<code>/caveman ultra</code> for maximum compression), a companion tool that rewrites your <code>CLAUDE.md</code> memory file into compressed form (cutting ~46% of input tokens per session start), and an experimental Wenyan mode using Classical Chinese for further compression. The repo crossed 50,000 GitHub stars within two weeks of launch.</p>
-
-  <hr class="divider">
-
-  <span class="skill-num">03 / 03</span>
-  <h2>Context Mode</h2>
-
-  <img class="skill-img" src="https://opengraph.githubassets.com/3e14fd478263198357c05d005ebe97204ae791261d44dd255e013f71c684c6fb/mksglu/context-mode" alt="Context Mode — MCP server for context window optimization" loading="lazy">
-
-  <div class="link-row">
-    <a class="pill-link" href="https://github.com/mksglu/context-mode" target="_blank">↗ GitHub</a>
-  </div>
-
-  <div class="code-wrap">
-    <div class="code-header">
-      <span>INSTALL</span>
-      <button class="copy-btn" onclick="copyCode(this, 'cmd-context')">
-        <span class="btn-label">Copy</span>
-      </button>
-    </div>
-    <pre id="cmd-context">claude mcp add context-mode -- npx -y context-mode</pre>
-  </div>
-
-  <p>If you use MCP tools like Playwright, Google Drive, or GitHub, this one is the most impactful. Every MCP call dumps its full raw payload into your context window and it stays there for the rest of the session. A single Playwright snapshot costs 56 KB. Twenty GitHub issues cost 59 KB. One access log: 45 KB. Context Mode is an MCP server by Mert Köseoğlu that sits between Claude Code and those tools — intercepting calls, storing raw output locally in a SQLite FTS5 database, and returning only a concise summary to the conversation. The raw data stays addressable for follow-up queries via full-text search, but it never bloats the context. The benchmark: 315 KB of raw output compressed to 5.4 KB visible context — a 98% reduction. It also tracks session state in SQLite so that when the conversation compacts, the agent doesn't lose track of what it was doing.</p>
-
-  <hr class="divider">
-
-  <p>Stack all three and you're covering every major source of token waste: terminal noise (RTK), verbose model output (Caveman), and MCP payload bloat (Context Mode).</p>
-
-</article>
-
-<footer>
-  &copy; 2026 &nbsp;·&nbsp; All rights reserved
-</footer>
+<footer><p class="label">&copy; 2026 Adi &nbsp;·&nbsp; All rights reserved</p></footer>
 
 <script>
-  const bar = document.getElementById('progress');
-  window.addEventListener('scroll', () => {
-    const total = document.body.scrollHeight - window.innerHeight;
-    bar.style.width = (window.scrollY / total * 100) + '%';
-  }, { passive: true });
-
-  let resetTimers = {};
-
-  function copyCode(btn, id) {
-    const text = document.getElementById(id).textContent;
-    const label = btn.querySelector(".btn-label");
-
-    if (resetTimers[id]) clearTimeout(resetTimers[id]);
-    btn.classList.remove("fading");
-    label.textContent = "Copied!";
-    btn.classList.add("copied");
-
-    resetTimers[id] = setTimeout(() => {
-      btn.classList.remove("copied");
-      btn.classList.add("fading");
-      setTimeout(() => {
-        label.textContent = "Copy";
-        btn.classList.remove("fading");
-      }, 620);
-    }, 1600);
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-    } else {
-      fallbackCopy(text);
+  async function copyCode(button) {
+    button.disabled = true;
+    try {
+      await navigator.clipboard.writeText(button.closest('.code').querySelector('pre').textContent);
+      button.textContent = 'Copied';
+    } catch {
+      button.textContent = 'Copy failed';
     }
-  }
-
-  function fallbackCopy(text) {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;pointer-events:none;";
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
-    try { document.execCommand("copy"); } catch(e) {}
-    document.body.removeChild(ta);
+    setTimeout(() => {
+      button.textContent = 'Copy';
+      button.disabled = false;
+    }, 1600);
   }
 </script>
 
